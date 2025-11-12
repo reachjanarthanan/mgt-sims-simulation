@@ -63,14 +63,22 @@
         </table>
       </div>
 
-      <!-- Chart -->
-      <canvas id="myChart" height="150"></canvas>
+      <!-- ROI Chart -->
+<h5 class="mt-4">ROI by Round (%)</h5>
+<canvas id="roiChart" height="120"></canvas>
+
+<!-- Download Button -->
+<button id="downloadPdfBtn" class="btn btn-outline-primary mt-4">Download Report (PDF)</button>
+
     </div>
 
     <footer class="mt-5 text-muted">
       © 2025 MGT SIMS | Academic Leader in Management Simulations
     </footer>
   </div>
+  
+<!-- jsPDF library for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script src="script_firebase.js"></script>
 </body>
