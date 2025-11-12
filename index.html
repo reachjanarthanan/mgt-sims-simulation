@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>MGT SIMS — Digital Campaign Manager™</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+ body{font-family:Arial,Helvetica,sans-serif;background:#f7f8fb;margin:0;padding:0;}
+ header{text-align:center;background:#fff;padding:20px 10px;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+ header img{width:160px;margin-bottom:8px;}
+ h1{margin:0;color:#0b3d91;font-size:20px;}
+ main{max-width:950px;margin:30px auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 3px 8px rgba(0,0,0,.06);}
+ button{background:#007bff;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;}
+ #loginBox input{padding:8px;width:260px;margin:5px 0;}
+ #simContainer{display:none;}
+ footer{text-align:center;margin-top:40px;color:#888;font-size:13px;}
+</style>
+</head>
+<body>
+<header>
+  <img src="assets/MGT SIMS.png" alt="MGT SIMS Logo"/>
+  <h1>Welcome to the MGT SIMS Digital Campaign Manager Simulation</h1>
+</header>
+
+<main>
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <p>Login or register to begin:</p>
+    <input type="email" id="email" placeholder="Email"/><br/>
+    <input type="password" id="password" placeholder="Password"/><br/>
+    <button id="loginBtn">Login</button>
+    <button id="registerBtn" style="background:#28a745;margin-left:6px;">Register</button>
+    <p id="loginMsg" style="color:red;"></p>
+  </div>
+
+  <!-- SIMULATION -->
+  <div id="simContainer">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div><b id="userName"></b></div>
+      <button id="logoutBtn" style="background:#6c757d;">Logout</button>
+    </div>
+    <hr/>
+    <div id="simArea"></div>
+  </div>
+</main>
+
+<footer>
+© 2025 MGT SIMS | Academic Leader in Management Simulations
+</footer>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+<!-- Chart / PDF libs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<!-- Your simulation logic -->
+<script src="script_firebase.js"></script>
+</body>
+</html>
