@@ -2,14 +2,19 @@
 // 1. Paste your Firebase config below
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDlMwfSRvcncimEoZEjelBzM7QM53XreoI",
+  apiKey: "AIzaSyD5vl32N36EEuL4T6AaxGTvCruiXEhqmUE",
   authDomain: "mgt-sims.firebaseapp.com",
   projectId: "mgt-sims",
   storageBucket: "mgt-sims.firebasestorage.app",
   messagingSenderId: "68578603565",
-  appId: "1:68578603565:web:b2685c211c60ad3f14bea4",
-  measurementId: "G-JQEQ0KTZXV"
+  appId: "1:68578603565:web:641cdeb2bbf3444814bea4",
+  measurementId: "G-6LXSJSDJTK"
 };
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
 
 // ========== AUTHENTICATION ==========
 const loginBox=document.getElementById('loginBox');
