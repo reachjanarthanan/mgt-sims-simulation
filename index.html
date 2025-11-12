@@ -1,64 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<title>MGT SIMS — Digital Campaign Manager™</title>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<style>
- body{font-family:Arial,Helvetica,sans-serif;background:#f7f8fb;margin:0;padding:0;}
- header{text-align:center;background:#fff;padding:20px 10px;box-shadow:0 2px 6px rgba(0,0,0,.08);}
- header img{width:160px;margin-bottom:8px;}
- h1{margin:0;color:#0b3d91;font-size:20px;}
- main{max-width:950px;margin:30px auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 3px 8px rgba(0,0,0,.06);}
- button{background:#007bff;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;}
- #loginBox input{padding:8px;width:260px;margin:5px 0;}
- #simContainer{display:none;}
- footer{text-align:center;margin-top:40px;color:#888;font-size:13px;}
-</style>
+  <meta charset="UTF-8">
+  <title>MGT SIMS | Digital Campaign Manager Simulation</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body { background-color: #f7f7fb; font-family: 'Segoe UI', sans-serif; }
+    .container { max-width: 900px; margin-top: 50px; }
+    .login-box, .sim-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    table input { width: 100%; }
+    #logoutBtn { float: right; }
+  </style>
 </head>
+
 <body>
-<header>
-  <img src="assets/MGT SIMS.png" alt="MGT SIMS Logo"/>
-  <h1>Welcome to the MGT SIMS Digital Campaign Manager Simulation</h1>
-</header>
+  <div class="container text-center">
+    <img src="assets/MGT SIMS.png" width="150" alt="MGT SIMS Logo" class="mb-3">
+    <h4>Welcome to the MGT SIMS Digital Campaign Manager Simulation</h4>
 
-<main>
-  <!-- LOGIN -->
-  <div id="loginBox">
-    <p>Login or register to begin:</p>
-    <input type="email" id="email" placeholder="Email"/><br/>
-    <input type="password" id="password" placeholder="Password"/><br/>
-    <button id="loginBtn">Login</button>
-    <button id="registerBtn" style="background:#28a745;margin-left:6px;">Register</button>
-    <p id="loginMsg" style="color:red;"></p>
-  </div>
-
-  <!-- SIMULATION -->
-  <div id="simContainer">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <div><b id="userName"></b></div>
-      <button id="logoutBtn" style="background:#6c757d;">Logout</button>
+    <!-- Login Section -->
+    <div id="loginSection" class="login-box mt-4">
+      <h5>Login or register to begin:</h5>
+      <input type="email" id="email" class="form-control mb-2" placeholder="Email">
+      <input type="password" id="password" class="form-control mb-2" placeholder="Password">
+      <button id="loginBtn" class="btn btn-primary me-2">Login</button>
+      <button id="registerBtn" class="btn btn-success">Register</button>
     </div>
-    <hr/>
-    <div id="simArea"></div>
+
+    <!-- Simulation Section -->
+    <div id="simSection" class="sim-box mt-4" style="display:none;">
+      <div>
+        <span id="userEmail" class="fw-bold"></span>
+        <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+      </div>
+      <hr>
+      <div class="text-start mb-3">
+        <label for="roundSelect" class="fw-bold">Round:</label>
+        <select id="roundSelect" class="form-select d-inline-block w-auto">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <button id="runRoundBtn" class="btn btn-primary ms-2">Run Round</button>
+      </div>
+
+      <!-- Input Fields -->
+      <div id="inputsSection" class="text-start">
+        <table class="table table-bordered">
+          <thead><tr><th>Channel</th><th>Budget ($ per 1000 impressions)</th></tr></thead>
+          <tbody>
+            <tr><td>Google</td><td><input type="number" id="googleInput" placeholder="1000"></td></tr>
+            <tr><td>Social Media</td><td><input type="number" id="socialInput" placeholder="8000"></td></tr>
+            <tr><td>Email</td><td><input type="number" id="emailInput" placeholder="50000"></td></tr>
+            <tr><td>Influencer</td><td><input type="number" id="influencerInput" placeholder="2000"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Chart -->
+      <canvas id="myChart" height="150"></canvas>
+    </div>
+
+    <footer class="mt-5 text-muted">
+      © 2025 MGT SIMS | Academic Leader in Management Simulations
+    </footer>
   </div>
-</main>
 
-<footer>
-© 2025 MGT SIMS | Academic Leader in Management Simulations
-</footer>
-
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
-<!-- Chart / PDF libs -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<!-- Your simulation logic -->
-<script src="script_firebase.js"></script>
+  <script src="script_simulation.js"></script>
 </body>
 </html>

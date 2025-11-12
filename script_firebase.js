@@ -16,50 +16,99 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 
-// ========== AUTHENTICATION ==========
-const loginBox=document.getElementById('loginBox');
-const simContainer=document.getElementById('simContainer');
-const simArea=document.getElementById('simArea');
-const msg=document.getElementById('loginMsg');
-document.getElementById('loginBtn').onclick=()=>auth.signInWithEmailAndPassword(email.value,password.value).catch(e=>msg.innerText=e.message);
-document.getElementById('registerBtn').onclick=()=>auth.createUserWithEmailAndPassword(email.value,password.value).catch(e=>msg.innerText=e.message);
-document.getElementById('logoutBtn').onclick=()=>auth.signOut();
+// -----------------------------
+// UI Elements
+// -----------------------------
+const loginSection = document.getElementById("loginSection");
+const simSection = document.getElementById("simSection");
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const userEmail = document.getElementById("userEmail");
+const runRoundBtn = document.getElementById("runRoundBtn");
 
-auth.onAuthStateChanged(user=>{
-  if(user){loginBox.style.display='none';simContainer.style.display='block';document.getElementById('userName').innerText=user.email;buildSimUI(user);}
-  else{loginBox.style.display='block';simContainer.style.display='none';simArea.innerHTML='';}
+// -----------------------------
+// Auth Event Listeners
+// -----------------------------
+loginBtn.onclick = () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  auth.signInWithEmailAndPassword(email, password).catch(err => alert(err.message));
+};
+
+registerBtn.onclick = () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  auth.createUserWithEmailAndPassword(email, password).catch(err => alert(err.message));
+};
+
+logoutBtn.onclick = () => auth.signOut();
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    loginSection.style.display = "none";
+    simSection.style.display = "block";
+    userEmail.textContent = user.email;
+  } else {
+    loginSection.style.display = "block";
+    simSection.style.display = "none";
+  }
 });
 
-// ========== SIMULATION ==========
-function buildSimUI(user){
- simArea.innerHTML=`
- <div>
-   <label>Round:</label>
-   <select id="roundSelect"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
-   <button id="runBtn">Run Round</button>
- </div>
- <canvas id="revChart" width="700" height="300"></canvas>
- <div id="report"></div>
- `;
- const ctx=document.getElementById('revChart').getContext('2d');
- const chart=new Chart(ctx,{type:'bar',data:{labels:['Google','Social','Email','Influencer'],datasets:[{label:'Revenue',data:[0,0,0,0]}]},options:{scales:{y:{beginAtZero:true}}}});
- document.getElementById('runBtn').onclick=()=>runRound(user,chart);
-}
+// -----------------------------
+// Simulation Logic
+// -----------------------------
+runRoundBtn.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please login first.");
 
-function rand(){return 1+(Math.random()-.5)*.1;}
-async function runRound(user,chart){
- const r=parseInt(document.getElementById('roundSelect').value);
- const avgOrder=[35,38,40,42,48][r-1];
- const ch={g:{b:1000,c:0.04,v:0.25},s:{b:8000,c:0.11,v:0.32},e:{b:50000,c:0.12,v:0.03},i:{b:2000,c:0.25,v:0.25}};
- function sim(base,ctr,conv){const imp=base*rand();const clk=imp*ctr;const con=clk*conv;return {revenue:con*avgOrder,conv:con};}
- const g=sim(ch.g.b,ch.g.c,ch.g.v),s=sim(ch.s.b,ch.s.c,ch.s.v),e=sim(ch.e.b,ch.e.c,ch.e.v),i=sim(ch.i.b,ch.i.c,ch.i.v);
- const total=g.revenue+s.revenue+e.revenue+i.revenue;
- const profit=total-5000; const roi=(profit/5000)*100;
- chart.data.datasets[0].data=[g.revenue,s.revenue,e.revenue,i.revenue];chart.update();
- document.getElementById('report').innerHTML=`<p>Round ${r} | Profit: $${profit.toFixed(2)} | ROI: ${roi.toFixed(1)}%</p>`;
- await db.collection('users').doc(user.uid).collection('rounds').doc(String(r)).set({
-   round:r,profit,roi,avgOrder,totalRevenue:total,
-   google:g,social:s,email:e,influencer:i,
-   timestamp:firebase.firestore.FieldValue.serverTimestamp()
- });
+  const round = parseInt(document.getElementById("roundSelect").value);
+  const google = parseFloat(document.getElementById("googleInput").value) || 0;
+  const social = parseFloat(document.getElementById("socialInput").value) || 0;
+  const email = parseFloat(document.getElementById("emailInput").value) || 0;
+  const influencer = parseFloat(document.getElementById("influencerInput").value) || 0;
+
+  if (google + social + email + influencer <= 0) {
+    alert("Enter valid budgets for all channels!");
+    return;
+  }
+
+  // Basic simulation formula (can be made dynamic later)
+  const revenue = (google * 0.25) + (social * 0.22) + (email * 0.15) + (influencer * 0.30);
+  const profit = revenue - (google + social + email + influencer);
+
+  await db.collection("users").doc(user.uid)
+    .collection("rounds").doc("round_" + round)
+    .set({ google, social, email, influencer, revenue, profit, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+
+  drawChart([google, social, email, influencer], revenue);
+  alert(`Round ${round} completed! Revenue: $${revenue.toFixed(2)}`);
+});
+
+// -----------------------------
+// Chart Drawing
+// -----------------------------
+let chart;
+function drawChart(budgets, revenue) {
+  const ctx = document.getElementById("myChart").getContext("2d");
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["Google", "Social", "Email", "Influencer"],
+      datasets: [{
+        label: "Budgets",
+        data: budgets,
+        backgroundColor: "lightblue"
+      }]
+    },
+    options: {
+      plugins: {
+        title: { display: true, text: `Round Revenue: $${revenue.toFixed(2)}` }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
 }
