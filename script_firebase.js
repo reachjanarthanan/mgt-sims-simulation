@@ -15,7 +15,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-
 //-----------------------------------------------------
 // UI ELEMENTS
 //-----------------------------------------------------
@@ -192,3 +191,6 @@ pdfBtn.addEventListener("click", () => {
       y += 10;
     }
   });
+
+  doc.save("MGT_SIM_Report.pdf");
+});
