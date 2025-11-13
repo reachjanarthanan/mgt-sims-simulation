@@ -3,43 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <title>MGT SIMS | Digital Campaign Manager Simulation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- jsPDF (for download PDF button) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
   <style>
     body { background-color: #f7f7fb; font-family: 'Segoe UI', sans-serif; }
-    .container { max-width: 900px; margin-top: 50px; }
-    .login-box, .sim-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .container { max-width: 930px; margin-top: 40px; }
+    .login-box, .sim-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.08); }
     table input { width: 100%; }
+    h4 { color: #003399; }
     #logoutBtn { float: right; }
   </style>
 </head>
 
 <body>
   <div class="container text-center">
-    <img src="assets/MGT SIMS.png" width="150" alt="MGT SIMS Logo" class="mb-3">
+
+    <!-- Logo -->
+    <img src="assets/MGT SIMS.png" width="150" class="mb-3">
     <h4>Welcome to the MGT SIMS Digital Campaign Manager Simulation</h4>
 
-    <!-- Login Section -->
+    <!-- ------------------------------ -->
+    <!-- Login Section                  -->
+    <!-- ------------------------------ -->
     <div id="loginSection" class="login-box mt-4">
       <h5>Login or register to begin:</h5>
+
       <input type="email" id="email" class="form-control mb-2" placeholder="Email">
-      <input type="password" id="password" class="form-control mb-2" placeholder="Password">
+      <input type="password" id="password" class="form-control mb-3" placeholder="Password">
+
       <button id="loginBtn" class="btn btn-primary me-2">Login</button>
       <button id="registerBtn" class="btn btn-success">Register</button>
     </div>
 
-    <!-- Simulation Section -->
+    <!-- ------------------------------ -->
+    <!-- Simulation Section             -->
+    <!-- ------------------------------ -->
     <div id="simSection" class="sim-box mt-4" style="display:none;">
-      <div>
+
+      <div class="d-flex justify-content-between align-items-center">
         <span id="userEmail" class="fw-bold"></span>
         <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
       </div>
+
       <hr>
+
+      <!-- Round selection -->
       <div class="text-start mb-3">
         <label for="roundSelect" class="fw-bold">Round:</label>
+
         <select id="roundSelect" class="form-select d-inline-block w-auto">
           <option value="1">1</option>
           <option value="2">2</option>
@@ -47,13 +72,19 @@
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
+
         <button id="runRoundBtn" class="btn btn-primary ms-2">Run Round</button>
       </div>
 
-      <!-- Input Fields -->
+      <!-- Inputs Section -->
       <div id="inputsSection" class="text-start">
         <table class="table table-bordered">
-          <thead><tr><th>Channel</th><th>Budget ($ per 1000 impressions)</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>Budget ($ per 1000 impressions)</th>
+            </tr>
+          </thead>
           <tbody>
             <tr><td>Google</td><td><input type="number" id="googleInput" placeholder="1000"></td></tr>
             <tr><td>Social Media</td><td><input type="number" id="socialInput" placeholder="8000"></td></tr>
@@ -63,23 +94,29 @@
         </table>
       </div>
 
-      <!-- ROI Chart -->
-<h5 class="mt-4">ROI by Round (%)</h5>
-<canvas id="roiChart" height="120"></canvas>
+      <!-- Revenue Chart -->
+      <h5 class="mt-4">Budget Allocation & Revenue</h5>
+      <canvas id="myChart" height="150"></canvas>
 
-<!-- Download Button -->
-<button id="downloadPdfBtn" class="btn btn-outline-primary mt-4">Download Report (PDF)</button>
+      <!-- ROI Chart -->
+      <h5 class="mt-4">ROI by Round (%)</h5>
+      <canvas id="roiChart" height="120"></canvas>
+
+      <!-- PDF Download -->
+      <button id="downloadPdfBtn" class="btn btn-outline-primary mt-4">
+        Download Report (PDF)
+      </button>
 
     </div>
 
     <footer class="mt-5 text-muted">
       © 2025 MGT SIMS | Academic Leader in Management Simulations
     </footer>
-  </div>
-  
-<!-- jsPDF library for PDF export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+  </div>
+
+  <!-- Load your Simulation JS -->
   <script src="script_firebase_v1.js"></script>
+
 </body>
 </html>
